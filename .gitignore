@@ -1,32 +1,41 @@
-# Prerequisites
-*.d
-
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
-*.exe
-*.out
-*.app
+#include <Servo.h>
+#include <LiquidCrystal.h>
+Servo myservo;
+LiquidCrystal lcd(12,11,5,4,3,2,1);
+const int TRIG_PIN = 8;
+int val;
+int dis;
+int delay;
+const int ECHO_PIN = 9;
+void setup() {
+  Serial.begin(9600);
+  lcd.begin(16,2);
+myservo.attach(10);
+  pinMode(TRIG_PIN,OUTPUT);
+  pinMode(ECHO_PIN,INPUT);
+}
+void loop()
+{
+   long duration, distanceCm, distanceIn;
+  digitalWrite(TRIG_PIN, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG_PIN, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG_PIN, LOW);
+  duration = pulseIn(ECHO_PIN,HIGH);
+  distanceCm = duration / 29.1 / 2 ;
+  distanceIn = duration / 74 / 2;
+  Serial.println(distanceCm);
+  if(distanceCm<=100 || distanceCm>=0){
+    val=distanceCm*0.9;
+    takhir=distanceCm*100;
+    delay=20000-delay;
+    Serial.println(distanceCm);
+    myservo.write(val);
+    delayMicroseconds(delay);
+    }
+    else{
+      Serial.println("not in rate...");
+      delay(10);
+      }
+}
